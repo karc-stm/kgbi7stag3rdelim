@@ -20,1502 +20,26 @@
         </div>
       </div>
 
-      <div class="search-wrap">
-        <input id="fightSearch" type="search" autocomplete="off" placeholder="Search Fight #, Entry Name or Owner" class="search-input">
+      <div class="toolbar-row">
+        <div class="search-wrap">
+          <input id="fightSearch" type="search" autocomplete="off" placeholder="Search Fight #, Entry Name or Owner" class="search-input">
+        </div>
+
+        <button id="viewToggle" class="icon-button summary-icon" type="button" aria-label="Show entry summary" title="Entry summary"></button>
       </div>
     </header>
 
     <div id="fightCards" class="fight-list"></div>
+    <section id="summaryView" class="summary-view hidden" aria-label="Entry summary"></section>
     <div id="emptyState" class="state-msg hidden">No fight found.</div>
   </main>
 
   <script>
-    const rawFights = [
-      {
-            "fightNumber": "1",
-            "left": {
-                  "entryName": "JEB CLASSIC",
-                  "owner": "SB BANDIGAN - LAM",
-                  "wb": "236",
-                  "weight": "1775",
-                  "score": "0-0",
-                  "result": "0"
-            },
-            "right": {
-                  "entryName": "PAW PAW",
-                  "owner": "ITIK - ISU",
-                  "wb": "634",
-                  "weight": "1765",
-                  "score": "1-1/2",
-                  "result": "1 1/2"
-            }
-      },
-      {
-            "fightNumber": "2",
-            "left": {
-                  "entryName": "5 BROTHERS",
-                  "owner": "A. ACUÑA/BUENAFLOR - LEBAK",
-                  "wb": "361",
-                  "weight": "1845",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "MB 12 RLD MAXX/MACKIE GF",
-                  "owner": "M. LASTIMOSO - MAASIM",
-                  "wb": "833",
-                  "weight": "1845",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "3",
-            "left": {
-                  "entryName": "MBS GF",
-                  "owner": "B.&J SEGURA - BAG",
-                  "wb": "691",
-                  "weight": "2085",
-                  "score": "0-0",
-                  "result": "0"
-            },
-            "right": {
-                  "entryName": "SPA 108 GF",
-                  "owner": "S. AKIATAN - SNA",
-                  "wb": "715",
-                  "weight": "2085",
-                  "score": "1-1",
-                  "result": "2"
-            }
-      },
-      {
-            "fightNumber": "4",
-            "left": {
-                  "entryName": "POWER ONE",
-                  "owner": "",
-                  "wb": "307",
-                  "weight": "1700",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "NKC GF",
-                  "owner": "NATOY ADOLFO - KOR. CITY",
-                  "wb": "966",
-                  "weight": "1700",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "5",
-            "left": {
-                  "entryName": "MBC BACKYARD",
-                  "owner": "M. CACHERO - ESP",
-                  "wb": "8045",
-                  "weight": "1720",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "BIGCHIEF 2",
-                  "owner": "P/E RECINTO - LAM",
-                  "wb": "897",
-                  "weight": "1725",
-                  "score": "0-co",
-                  "result": "0 co"
-            }
-      },
-      {
-            "fightNumber": "6",
-            "left": {
-                  "entryName": "ISABELLE SISTERS",
-                  "owner": "ALVIN & JOHN REGANIT - GENSAN",
-                  "wb": "951",
-                  "weight": "1925",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "FIRE STARTER",
-                  "owner": "J.C PELAEZ - PQ",
-                  "wb": "232",
-                  "weight": "1920",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "7",
-            "left": {
-                  "entryName": "PMY 3C GF 1",
-                  "owner": "BOK&MAY2/ ARVIN P. - ISU",
-                  "wb": "286",
-                  "weight": "1870",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "POB. PQ",
-                  "owner": "KAG. CALANG - PQ",
-                  "wb": "7007",
-                  "weight": "1870",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "8",
-            "left": {
-                  "entryName": "JD BLOOD MOON",
-                  "owner": "B. DURANA - ISU",
-                  "wb": "779",
-                  "weight": "1835",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "JACOB ACE DA",
-                  "owner": "DE ASIS - TAC",
-                  "wb": "772",
-                  "weight": "1835",
-                  "score": "1-0",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "9",
-            "left": {
-                  "entryName": "RM PRINCESS",
-                  "owner": "K/R MALUNES - ESP",
-                  "wb": "8070",
-                  "weight": "1700",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "DOUBLE EE",
-                  "owner": "AMEE TONO - ISU",
-                  "wb": "2007",
-                  "weight": "1700",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "10",
-            "left": {
-                  "entryName": "JR SEVENTYSIX GF",
-                  "owner": "R. FUSCABLO - NOR",
-                  "wb": "140",
-                  "weight": "1840",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "POWER CHOICE",
-                  "owner": "",
-                  "wb": "212",
-                  "weight": "1845",
-                  "score": "1-1",
-                  "result": "2"
-            }
-      },
-      {
-            "fightNumber": "11",
-            "left": {
-                  "entryName": "ENTRA EG 711 - 1",
-                  "owner": "ENGR. GALAPON - ESP",
-                  "wb": "861",
-                  "weight": "2200",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "SHAGGY/ AA DEONILLA",
-                  "owner": "E. AGUINALDO/ V. BIADO - ISU",
-                  "wb": "709",
-                  "weight": "2165",
-                  "score": "1-0",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "12",
-            "left": {
-                  "entryName": "3J RED THUNDER GF",
-                  "owner": "J. SENUGBA - ESP",
-                  "wb": "8063",
-                  "weight": "1930",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "LJPE GARDEN GF",
-                  "owner": "P. ESTABILLO - MAITUM",
-                  "wb": "671",
-                  "weight": "1925",
-                  "score": "1-0",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "13",
-            "left": {
-                  "entryName": "ELPT",
-                  "owner": "EDGAR P./ JK ELIDO - ISU",
-                  "wb": "980",
-                  "weight": "1960",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "TRES HERMANOS",
-                  "owner": "",
-                  "wb": "885",
-                  "weight": "1960",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "14",
-            "left": {
-                  "entryName": "THUNDERS",
-                  "owner": "E. GLEYO - ISU",
-                  "wb": "558",
-                  "weight": "1780",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "GEGS FARM",
-                  "owner": "J. GEGONE - ESP",
-                  "wb": "759",
-                  "weight": "1780",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "15",
-            "left": {
-                  "entryName": "DJJ ONGGING 1004",
-                  "owner": "B&J SEGURA - BAG",
-                  "wb": "104",
-                  "weight": "1985",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "KARC 3",
-                  "owner": "",
-                  "wb": "290",
-                  "weight": "1980",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "16",
-            "left": {
-                  "entryName": "GEAR SLASHER 21",
-                  "owner": "E. BARBECHO/BON2 - PQ",
-                  "wb": "7014",
-                  "weight": "1800",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "BAGWIS 74",
-                  "owner": "E.R GRUZO - ESP",
-                  "wb": "693",
-                  "weight": "1800",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "17",
-            "left": {
-                  "entryName": "MBC BACKYARD",
-                  "owner": "M. CACHERO - ESP",
-                  "wb": "8056",
-                  "weight": "1730",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "PJ 817",
-                  "owner": "B. DURANA - ISU",
-                  "wb": "624",
-                  "weight": "1745",
-                  "score": "1-0",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "18",
-            "left": {
-                  "entryName": "JAKE KINGFISHER GF",
-                  "owner": "J. ARANDAIN - KOR",
-                  "wb": "191",
-                  "weight": "1750",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "BP - CP 2",
-                  "owner": "B. PIZ/R. GENTAPANAN - ISU",
-                  "wb": "888",
-                  "weight": "1745",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "19",
-            "left": {
-                  "entryName": "ENTRA EG 711 - 2",
-                  "owner": "ENGR. GALAPON - ESP",
-                  "wb": "696",
-                  "weight": "1930",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "BLUE ALSON 2",
-                  "owner": "",
-                  "wb": "248",
-                  "weight": "1940",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "20",
-            "left": {
-                  "entryName": "PMY 3C GF - 2",
-                  "owner": "BOK&MAY2/ ARVIN P. - ISU",
-                  "wb": "271",
-                  "weight": "2070",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "NAZI 2 SLASHERS",
-                  "owner": "DOC AGA - TAC",
-                  "wb": "703",
-                  "weight": "2075",
-                  "score": "1-1",
-                  "result": "2"
-            }
-      },
-      {
-            "fightNumber": "21",
-            "left": {
-                  "entryName": "ZD ALA",
-                  "owner": "M. GONZALES - ESP",
-                  "wb": "629",
-                  "weight": "1775",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "DADZ ELITE 2",
-                  "owner": "K. DADOR - ESP",
-                  "wb": "963",
-                  "weight": "1780",
-                  "score": "0-1/2",
-                  "result": "1/2"
-            }
-      },
-      {
-            "fightNumber": "22",
-            "left": {
-                  "entryName": "KIM KULAMAN",
-                  "owner": "LOLOY LATO - SNA",
-                  "wb": "721",
-                  "weight": "1900",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "APL GF 1",
-                  "owner": "APL - ISU",
-                  "wb": "658",
-                  "weight": "1935",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "23",
-            "left": {
-                  "entryName": "JDR88/STR88 GF",
-                  "owner": "J. BONILLA/J. DELA ROSA - LAM",
-                  "wb": "524",
-                  "weight": "1790",
-                  "score": "0-0",
-                  "result": "0"
-            },
-            "right": {
-                  "entryName": "KARC 1",
-                  "owner": "",
-                  "wb": "841",
-                  "weight": "1800",
-                  "score": "1-1",
-                  "result": "2"
-            }
-      },
-      {
-            "fightNumber": "24",
-            "left": {
-                  "entryName": "RAGAAK BANAWAG",
-                  "owner": "KOR CITY",
-                  "wb": "215",
-                  "weight": "1690",
-                  "score": "1/2-1",
-                  "result": "1 1/2"
-            },
-            "right": {
-                  "entryName": "GOLDEN R GF",
-                  "owner": "R. DADIVAS - TBOLI",
-                  "wb": "484",
-                  "weight": "1675",
-                  "score": "1-1/2",
-                  "result": "1 1/2"
-            }
-      },
-      {
-            "fightNumber": "25",
-            "left": {
-                  "entryName": "CSJR/LGF",
-                  "owner": "C. SEGURA - TAC",
-                  "wb": "405",
-                  "weight": "1730",
-                  "score": "0-0",
-                  "result": "0"
-            },
-            "right": {
-                  "entryName": "RC WILDFLY",
-                  "owner": "ENGR. CACHERO - ESP",
-                  "wb": "8050",
-                  "weight": "1720",
-                  "score": "1-0",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "26",
-            "left": {
-                  "entryName": "BLUE ALSON 1",
-                  "owner": "",
-                  "wb": "239",
-                  "weight": "1820",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "SUPER FLY",
-                  "owner": "DOC CALLAO - TAC.",
-                  "wb": "715",
-                  "weight": "1810",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "27",
-            "left": {
-                  "entryName": "JEB CLASSIC",
-                  "owner": "SB BANDIGAN - LAM",
-                  "wb": "400",
-                  "weight": "1880",
-                  "score": "0-0",
-                  "result": "0"
-            },
-            "right": {
-                  "entryName": "DADZ ELITE 1",
-                  "owner": "K. DADOR - ESP",
-                  "wb": "971",
-                  "weight": "1880",
-                  "score": "1-0",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "28",
-            "left": {
-                  "entryName": "CHETO 3",
-                  "owner": "WILSON - ESP",
-                  "wb": "131",
-                  "weight": "1875",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "7DJ'S",
-                  "owner": "J. DURANA - ISU",
-                  "wb": "387",
-                  "weight": "1870",
-                  "score": "1-1",
-                  "result": "2"
-            }
-      },
-      {
-            "fightNumber": "29",
-            "left": {
-                  "entryName": "LRD",
-                  "owner": "CAP DOLOR/A. DOLAR - ISU.",
-                  "wb": "888",
-                  "weight": "2010",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "KARC 2",
-                  "owner": "",
-                  "wb": "266",
-                  "weight": "2035",
-                  "score": "1-1",
-                  "result": "2"
-            }
-      },
-      {
-            "fightNumber": "30",
-            "left": {
-                  "entryName": "EMC FARM",
-                  "owner": "E. CACHERO - ESP",
-                  "wb": "8044",
-                  "weight": "1805",
-                  "score": "1-co",
-                  "result": "1 co"
-            },
-            "right": {
-                  "entryName": "APL GF 2",
-                  "owner": "APL - ISU",
-                  "wb": "692",
-                  "weight": "1800",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "31",
-            "left": {
-                  "entryName": "LEVI 817/NKC",
-                  "owner": "J. DURANA - ISU",
-                  "wb": "854",
-                  "weight": "1755",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "TRES HERMANOS ECGF",
-                  "owner": "ELSON CASTILLON",
-                  "wb": "114",
-                  "weight": "1725",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "32",
-            "left": {
-                  "entryName": "ENTRA EG 711 - 1",
-                  "owner": "ENGR. GALAPON - ESP",
-                  "wb": "853",
-                  "weight": "1960",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "JDR88/STR88 GF",
-                  "owner": "J. BONILLA/J. DELA ROSA - LAM",
-                  "wb": "509",
-                  "weight": "1960",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "33",
-            "left": {
-                  "entryName": "5 BROTHERS",
-                  "owner": "A. ACUÑA/BUENAFLOR - LEBAK",
-                  "wb": "470",
-                  "weight": "2010",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "MBS GF",
-                  "owner": "B.&J SEGURA - BAG",
-                  "wb": "670",
-                  "weight": "2015",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "34",
-            "left": {
-                  "entryName": "POWER ONE",
-                  "owner": "",
-                  "wb": "216",
-                  "weight": "1700",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "D'WILD PUNISHER 69 GF",
-                  "owner": "JEFFERSON GIL - ISU",
-                  "wb": "7021",
-                  "weight": "1700",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "35",
-            "left": {
-                  "entryName": "CHETO",
-                  "owner": "WILSON - ESP",
-                  "wb": "1798",
-                  "weight": "1700",
-                  "score": "0-0",
-                  "result": "0"
-            },
-            "right": {
-                  "entryName": "JD BLOOD MOON",
-                  "owner": "B. DURANA - ISU",
-                  "wb": "767",
-                  "weight": "1715",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "36",
-            "left": {
-                  "entryName": "JAKE KINGFISHER GF",
-                  "owner": "J. ARANDAIN - KOR",
-                  "wb": "253",
-                  "weight": "1785",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "BIGCHIEF 1",
-                  "owner": "P/E RECINTO - LAM",
-                  "wb": "330",
-                  "weight": "1785",
-                  "score": "1-1",
-                  "result": "2"
-            }
-      },
-      {
-            "fightNumber": "37",
-            "left": {
-                  "entryName": "DJJ ONGGING 1004",
-                  "owner": "B&J SEGURA - BAG",
-                  "wb": "483",
-                  "weight": "1845",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "RC GF",
-                  "owner": "JOEL/CAPALAR RC - ISU",
-                  "wb": "966",
-                  "weight": "1850",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "38",
-            "left": {
-                  "entryName": "BLUE ALSON 1",
-                  "owner": "",
-                  "wb": "242",
-                  "weight": "1985",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "7DJ'S",
-                  "owner": "J. DURANA - ISU",
-                  "wb": "386",
-                  "weight": "1990",
-                  "score": "1-1",
-                  "result": "2"
-            }
-      },
-      {
-            "fightNumber": "39",
-            "left": {
-                  "entryName": "ZD ALA",
-                  "owner": "M. GONZALES - ESP",
-                  "wb": "211",
-                  "weight": "1915",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "MACKIE GF/ PAPA GEORGE",
-                  "owner": "M. LASTIMOSO - MAASIM",
-                  "wb": "903",
-                  "weight": "1910",
-                  "score": "1-1",
-                  "result": "2"
-            }
-      },
-      {
-            "fightNumber": "40",
-            "left": {
-                  "entryName": "SHAGGY/ AA DEONILLA",
-                  "owner": "E. AGUINALDO/ V. BIADO - ISU",
-                  "wb": "707",
-                  "weight": "2120",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "NAZI 2 SLASHERS",
-                  "owner": "DOC AGA - TAC",
-                  "wb": "707",
-                  "weight": "2125",
-                  "score": "1-1",
-                  "result": "2"
-            }
-      },
-      {
-            "fightNumber": "41",
-            "left": {
-                  "entryName": "POWER CHOICE",
-                  "owner": "",
-                  "wb": "705",
-                  "weight": "1950",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "J & V CAPRICORN",
-                  "owner": "J&V G. - BAG.",
-                  "wb": "931",
-                  "weight": "1960",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "42",
-            "left": {
-                  "entryName": "NATHANIEL",
-                  "owner": "H. FERMO - TAC",
-                  "wb": "4018",
-                  "weight": "1870",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "PJ 817",
-                  "owner": "B. DURANA - ISU",
-                  "wb": "854",
-                  "weight": "1865",
-                  "score": "1-0",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "43",
-            "left": {
-                  "entryName": "PMY 3C GF 1",
-                  "owner": "BOK&MAY2/ ARVIN P. - ISU",
-                  "wb": "285",
-                  "weight": "1700",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "BIGCHIEF 1",
-                  "owner": "P/E RECINTO - LAM",
-                  "wb": "854",
-                  "weight": "1700",
-                  "score": "1-1",
-                  "result": "2"
-            }
-      },
-      {
-            "fightNumber": "44",
-            "left": {
-                  "entryName": "BANAWAG",
-                  "owner": "ALI LOPEZ & J. LOZANO - PQ/KOR",
-                  "wb": "625",
-                  "weight": "1900",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "APL GF 1",
-                  "owner": "APL - ISU",
-                  "wb": "676",
-                  "weight": "1905",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "45",
-            "left": {
-                  "entryName": "CHETO 3",
-                  "owner": "WILSON - ESP",
-                  "wb": "800",
-                  "weight": "1950",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "RC GF",
-                  "owner": "JOEL/CAPALAR RC - ISU",
-                  "wb": "958",
-                  "weight": "1950",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "46",
-            "left": {
-                  "entryName": "ENTRA EG 711 - 2",
-                  "owner": "ENGR. GALAPON - ESP",
-                  "wb": "1012",
-                  "weight": "1830",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "POB. PQ",
-                  "owner": "KAG. CALANG - PQ",
-                  "wb": "7011",
-                  "weight": "1830",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "47",
-            "left": {
-                  "entryName": "KUMBATI JAP GF",
-                  "owner": "J. PACLIBARE/ R. SULLANO - ISU",
-                  "wb": "2054",
-                  "weight": "1915",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "BIGCHIEF 3",
-                  "owner": "P/E RECINTO - LAM",
-                  "wb": "603",
-                  "weight": "1920",
-                  "score": "1-0",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "48",
-            "left": {
-                  "entryName": "BP - CB 1",
-                  "owner": "B. PIZ/R. GENTAPANAN - ISU",
-                  "wb": "927",
-                  "weight": "1870",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "LJPE - BIG BRADER",
-                  "owner": "P. ESTABILLO - MAITUM",
-                  "wb": "617",
-                  "weight": "1870",
-                  "score": "1-1",
-                  "result": "2"
-            }
-      },
-      {
-            "fightNumber": "49",
-            "left": {
-                  "entryName": "NATHANIEL",
-                  "owner": "H. FERMO - TAC",
-                  "wb": "4086",
-                  "weight": "1920",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "MB 12 RLD MAXX/MACKIE GF",
-                  "owner": "M. LASTIMOSO - MAASIM",
-                  "wb": "797",
-                  "weight": "1915",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "50",
-            "left": {
-                  "entryName": "KARC 1",
-                  "owner": "",
-                  "wb": "203",
-                  "weight": "1860",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "REX SALABACA",
-                  "owner": "M. RANDING - ESP",
-                  "wb": "437",
-                  "weight": "1855",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "51",
-            "left": {
-                  "entryName": "GEGS FARM",
-                  "owner": "J. GEGONE - ESP",
-                  "wb": "755",
-                  "weight": "1770",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "BLACK HANDSOME",
-                  "owner": "JARWIN S.",
-                  "wb": "4084",
-                  "weight": "1775",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "52",
-            "left": {
-                  "entryName": "CHETO",
-                  "owner": "WILSON - ESP",
-                  "wb": "807",
-                  "weight": "1710",
-                  "score": "0-0",
-                  "result": "0"
-            },
-            "right": {
-                  "entryName": "LEVI 817/NKC",
-                  "owner": "J. DURANA - ISU",
-                  "wb": "908",
-                  "weight": "1720",
-                  "score": "1-1",
-                  "result": "2"
-            }
-      },
-      {
-            "fightNumber": "53",
-            "left": {
-                  "entryName": "EMC FARM",
-                  "owner": "E. CACHERO - ESP",
-                  "wb": "8043",
-                  "weight": "1730",
-                  "score": "1-co",
-                  "result": "1 co"
-            },
-            "right": {
-                  "entryName": "BIGCHIEF 2",
-                  "owner": "P/E RECINTO - LAM",
-                  "wb": "935",
-                  "weight": "1735",
-                  "score": "0-co",
-                  "result": "0 co"
-            }
-      },
-      {
-            "fightNumber": "54",
-            "left": {
-                  "entryName": "LRD",
-                  "owner": "CAP DOLOR/A. DOLAR - ISU.",
-                  "wb": "875",
-                  "weight": "1995",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "LAKAY BACKYARD",
-                  "owner": "E. AGUINALDO/ V. BIADO - ISU",
-                  "wb": "704",
-                  "weight": "2000",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "55",
-            "left": {
-                  "entryName": "SPA 108 GF",
-                  "owner": "S. AKIATAN - SNA",
-                  "wb": "750",
-                  "weight": "1970",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "MBC ENZO",
-                  "owner": "MELMEL C. - TAC",
-                  "wb": "315",
-                  "weight": "1985",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "56",
-            "left": {
-                  "entryName": "ISABELLE SISTERS",
-                  "owner": "ALVIN & JOHN REGANIT - GENSAN",
-                  "wb": "928",
-                  "weight": "2000",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "THUNDERS",
-                  "owner": "E. GLEYO - ISU",
-                  "wb": "561",
-                  "weight": "2005",
-                  "score": "1-1",
-                  "result": "2"
-            }
-      },
-      {
-            "fightNumber": "57",
-            "left": {
-                  "entryName": "RM PRINCESS",
-                  "owner": "K/R MALUNES - ESP",
-                  "wb": "8067",
-                  "weight": "1700",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "JR SEVENTYSIX GF",
-                  "owner": "R. FUSCABLO - NOR",
-                  "wb": "139",
-                  "weight": "1700",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "58",
-            "left": {
-                  "entryName": "FIRE STARTER",
-                  "owner": "J.C PELAEZ - PQ",
-                  "wb": "201",
-                  "weight": "1890",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "LJPE GARDEN GF",
-                  "owner": "P. ESTABILLO - MAITUM",
-                  "wb": "642",
-                  "weight": "1880",
-                  "score": "1-0",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "59",
-            "left": {
-                  "entryName": "CHETO 2",
-                  "owner": "WILSON - ESP",
-                  "wb": "916",
-                  "weight": "1865",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "KUMBATI JAP GF",
-                  "owner": "J. PACLIBARE/ R. SULLANO - ISU",
-                  "wb": "2033",
-                  "weight": "1855",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "60",
-            "left": {
-                  "entryName": "KIM KULAMAN",
-                  "owner": "LOLOY LATO - SNA",
-                  "wb": "675",
-                  "weight": "1960",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "APL GF 2",
-                  "owner": "APL - ISU",
-                  "wb": "695",
-                  "weight": "1965",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "61",
-            "left": {
-                  "entryName": "REX SALABACA",
-                  "owner": "M. RANDING - ESP",
-                  "wb": "439",
-                  "weight": "2130",
-                  "score": "0-0",
-                  "result": "0"
-            },
-            "right": {
-                  "entryName": "MBC ENZO",
-                  "owner": "MELMEL C. - TAC",
-                  "wb": "310",
-                  "weight": "2135",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "62",
-            "left": {
-                  "entryName": "3J RED THUNDER GF",
-                  "owner": "J. SENUGBA - ESP",
-                  "wb": "8066",
-                  "weight": "1890",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "GEAR SLASHER 21",
-                  "owner": "E. BARBECHO/BON2 - PQ",
-                  "wb": "7010",
-                  "weight": "1890",
-                  "score": "1-0",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "63",
-            "left": {
-                  "entryName": "LAKAY BACKYARD",
-                  "owner": "E. AGUINALDO/ V. BIADO - ISU",
-                  "wb": "711",
-                  "weight": "2000",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "J & V CAPRICORN",
-                  "owner": "J&V G. - BAG.",
-                  "wb": "941",
-                  "weight": "2000",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "64",
-            "left": {
-                  "entryName": "ELPT",
-                  "owner": "EDGAR P./ JK ELIDO - ISU",
-                  "wb": "974",
-                  "weight": "2040",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "BLUE ALSON 2",
-                  "owner": "",
-                  "wb": "235",
-                  "weight": "2035",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "65",
-            "left": {
-                  "entryName": "TRES HERMANOS",
-                  "owner": "",
-                  "wb": "914",
-                  "weight": "1930",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "BAGWIS 74",
-                  "owner": "E.R GRUZO - ESP",
-                  "wb": "687",
-                  "weight": "1930",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "66",
-            "left": {
-                  "entryName": "RAGAAK BANAWAG",
-                  "owner": "KOR CITY",
-                  "wb": "217",
-                  "weight": "1620",
-                  "score": "1/2-1",
-                  "result": "1 1/2"
-            },
-            "right": {
-                  "entryName": "BILISBISAN",
-                  "owner": "R. PEDROSO - TAC",
-                  "wb": "819",
-                  "weight": "1665",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "67",
-            "left": {
-                  "entryName": "KARC 2",
-                  "owner": "",
-                  "wb": "287",
-                  "weight": "1825",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "JACOB ACE DA",
-                  "owner": "DE ASIS - TAC",
-                  "wb": "750",
-                  "weight": "1825",
-                  "score": "1-0",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "68",
-            "left": {
-                  "entryName": "BIGCHIEF 3",
-                  "owner": "P/E RECINTO - LAM",
-                  "wb": "990",
-                  "weight": "2060",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "BLACK HANDSOME",
-                  "owner": "JARWIN S.",
-                  "wb": "4092",
-                  "weight": "2070",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "69",
-            "left": {
-                  "entryName": "BANAWAG",
-                  "owner": "ALI LOPEZ & J. LOZANO - PQ/KOR",
-                  "wb": "614",
-                  "weight": "2070",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "RC WILDFLY",
-                  "owner": "ENGR. CACHERO - ESP",
-                  "wb": "8051",
-                  "weight": "2070",
-                  "score": "1-0",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "70",
-            "left": {
-                  "entryName": "PAW PAW",
-                  "owner": "ITIK - ISU",
-                  "wb": "555",
-                  "weight": "1835",
-                  "score": "1-1/2",
-                  "result": "1 1/2"
-            },
-            "right": {
-                  "entryName": "DADZ ELITE 2",
-                  "owner": "K. DADOR - ESP",
-                  "wb": "960",
-                  "weight": "1835",
-                  "score": "0-1/2",
-                  "result": "1/2"
-            }
-      },
-      {
-            "fightNumber": "71",
-            "left": {
-                  "entryName": "DOUBLE EE",
-                  "owner": "AMEE TONO - ISU",
-                  "wb": "2004",
-                  "weight": "1970",
-                  "score": "0-0",
-                  "result": "0"
-            },
-            "right": {
-                  "entryName": "BILISBISAN",
-                  "owner": "R. PEDROSO - TAC",
-                  "wb": "809",
-                  "weight": "1965",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "72",
-            "left": {
-                  "entryName": "LJPE - BIG BRADER",
-                  "owner": "P. ESTABILLO - MAITUM",
-                  "wb": "616",
-                  "weight": "2100",
-                  "score": "1-1",
-                  "result": "2"
-            },
-            "right": {
-                  "entryName": "TRES HERMANOS ECGF",
-                  "owner": "ELSON CASTILLON",
-                  "wb": "162",
-                  "weight": "2085",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "73",
-            "left": {
-                  "entryName": "BP - CP 2",
-                  "owner": "B. PIZ/R. GENTAPANAN - ISU",
-                  "wb": "884",
-                  "weight": "1930",
-                  "score": "0-0",
-                  "result": "0"
-            },
-            "right": {
-                  "entryName": "MACKIE GF/ PAPA GEORGE",
-                  "owner": "M. LASTIMOSO - MAASIM",
-                  "wb": "796",
-                  "weight": "1935",
-                  "score": "1-1",
-                  "result": "2"
-            }
-      },
-      {
-            "fightNumber": "74",
-            "left": {
-                  "entryName": "CSJR/LGF",
-                  "owner": "C. SEGURA - TAC",
-                  "wb": "367",
-                  "weight": "1760",
-                  "score": "0-0",
-                  "result": "0"
-            },
-            "right": {
-                  "entryName": "GOLDEN R GF",
-                  "owner": "R. DADIVAS - TBOLI",
-                  "wb": "509",
-                  "weight": "1765",
-                  "score": "1-1/2",
-                  "result": "1 1/2"
-            }
-      },
-      {
-            "fightNumber": "75",
-            "left": {
-                  "entryName": "PMY 3C GF - 2",
-                  "owner": "BOK&MAY2/ ARVIN P. - ISU",
-                  "wb": "275",
-                  "weight": "1970",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "KARC 3",
-                  "owner": "",
-                  "wb": "329",
-                  "weight": "1965",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "76",
-            "left": {
-                  "entryName": "NKC GF",
-                  "owner": "NATOY ADOLFO - KOR. CITY",
-                  "wb": "586",
-                  "weight": "1775",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "D'WILD PUNISHER 69 GF",
-                  "owner": "JEFFERSON GIL - ISU",
-                  "wb": "556",
-                  "weight": "1780",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      },
-      {
-            "fightNumber": "77",
-            "left": {
-                  "entryName": "DADZ ELITE 1",
-                  "owner": "K. DADOR - ESP",
-                  "wb": "966",
-                  "weight": "1895",
-                  "score": "1-0",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "BP - CB 1",
-                  "owner": "B. PIZ/R. GENTAPANAN - ISU",
-                  "wb": "492",
-                  "weight": "1890",
-                  "score": "0-1",
-                  "result": "1"
-            }
-      },
-      {
-            "fightNumber": "78",
-            "left": {
-                  "entryName": "CHETO 2",
-                  "owner": "WILSON - ESP",
-                  "wb": "590",
-                  "weight": "1815",
-                  "score": "0-1",
-                  "result": "1"
-            },
-            "right": {
-                  "entryName": "SUPER FLY",
-                  "owner": "DOC CALLAO - TAC.",
-                  "wb": "855",
-                  "weight": "1805",
-                  "score": "0-0",
-                  "result": "0"
-            }
-      }
-];
+      const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJ1jV1ug9cgnr_xxb9TE1H7ICZSnUHM5tV78tp4va9xDfV06-fD3JsMF-9c_c3kxgpxA/exec';
+    const FALLBACK_FIGHTS = [{"fightNumber":"1","left":{"entryName":"JEB CLASSIC","owner":"SB BANDIGAN - LAM","wb":"236","weight":"1775","score":"0-0","result":"0"},"right":{"entryName":"PAW PAW","owner":"ITIK - ISU","wb":"634","weight":"1765","score":"1-1/2","result":"1 1/2"}},{"fightNumber":"2","left":{"entryName":"5 BROTHERS","owner":"A. ACUÑA/BUENAFLOR - LEBAK","wb":"361","weight":"1845","score":"1-1","result":"2"},"right":{"entryName":"MB 12 RLD MAXX/MACKIE GF","owner":"M. LASTIMOSO - MAASIM","wb":"833","weight":"1845","score":"0-0","result":"0"}},{"fightNumber":"3","left":{"entryName":"MBS GF","owner":"B.&J SEGURA - BAG","wb":"691","weight":"2085","score":"0-0","result":"0"},"right":{"entryName":"SPA 108 GF","owner":"S. AKIATAN - SNA","wb":"715","weight":"2085","score":"1-1","result":"2"}},{"fightNumber":"4","left":{"entryName":"POWER ONE","owner":"","wb":"307","weight":"1700","score":"1-1","result":"2"},"right":{"entryName":"NKC GF","owner":"NATOY ADOLFO - KOR. CITY","wb":"966","weight":"1700","score":"0-1","result":"1"}},{"fightNumber":"5","left":{"entryName":"MBC BACKYARD","owner":"M. CACHERO - ESP","wb":"8045","weight":"1720","score":"1-0","result":"1"},"right":{"entryName":"BIGCHIEF 2","owner":"P/E RECINTO - LAM","wb":"897","weight":"1725","score":"0-co","result":"0 co"}},{"fightNumber":"6","left":{"entryName":"ISABELLE SISTERS","owner":"ALVIN & JOHN REGANIT - GENSAN","wb":"951","weight":"1925","score":"1-0","result":"1"},"right":{"entryName":"FIRE STARTER","owner":"J.C PELAEZ - PQ","wb":"232","weight":"1920","score":"0-1","result":"1"}},{"fightNumber":"7","left":{"entryName":"PMY 3C GF 1","owner":"BOK&MAY2/ ARVIN P. - ISU","wb":"286","weight":"1870","score":"1-0","result":"1"},"right":{"entryName":"POB. PQ","owner":"KAG. CALANG - PQ","wb":"7007","weight":"1870","score":"0-0","result":"0"}},{"fightNumber":"8","left":{"entryName":"JD BLOOD MOON","owner":"B. DURANA - ISU","wb":"779","weight":"1835","score":"0-1","result":"1"},"right":{"entryName":"JACOB ACE DA","owner":"DE ASIS - TAC","wb":"772","weight":"1835","score":"1-0","result":"1"}},{"fightNumber":"9","left":{"entryName":"RM PRINCESS","owner":"K/R MALUNES - ESP","wb":"8070","weight":"1700","score":"1-0","result":"1"},"right":{"entryName":"DOUBLE EE","owner":"AMEE TONO - ISU","wb":"2007","weight":"1700","score":"0-0","result":"0"}},{"fightNumber":"10","left":{"entryName":"JR SEVENTYSIX GF","owner":"R. FUSCABLO - NOR","wb":"140","weight":"1840","score":"0-1","result":"1"},"right":{"entryName":"POWER CHOICE","owner":"","wb":"212","weight":"1845","score":"1-1","result":"2"}},{"fightNumber":"11","left":{"entryName":"ENTRA EG 711 - 1","owner":"ENGR. GALAPON - ESP","wb":"861","weight":"2200","score":"0-1","result":"1"},"right":{"entryName":"SHAGGY/ AA DEONILLA","owner":"E. AGUINALDO/ V. BIADO - ISU","wb":"709","weight":"2165","score":"1-0","result":"1"}},{"fightNumber":"12","left":{"entryName":"3J RED THUNDER GF","owner":"J. SENUGBA - ESP","wb":"8063","weight":"1930","score":"0-1","result":"1"},"right":{"entryName":"LJPE GARDEN GF","owner":"P. ESTABILLO - MAITUM","wb":"671","weight":"1925","score":"1-0","result":"1"}},{"fightNumber":"13","left":{"entryName":"ELPT","owner":"EDGAR P./ JK ELIDO - ISU","wb":"980","weight":"1960","score":"1-0","result":"1"},"right":{"entryName":"TRES HERMANOS","owner":"","wb":"885","weight":"1960","score":"0-1","result":"1"}},{"fightNumber":"14","left":{"entryName":"THUNDERS","owner":"E. GLEYO - ISU","wb":"558","weight":"1780","score":"1-1","result":"2"},"right":{"entryName":"GEGS FARM","owner":"J. GEGONE - ESP","wb":"759","weight":"1780","score":"0-1","result":"1"}},{"fightNumber":"15","left":{"entryName":"DJJ ONGGING 1004","owner":"B&J SEGURA - BAG","wb":"104","weight":"1985","score":"1-1","result":"2"},"right":{"entryName":"KARC 3","owner":"","wb":"290","weight":"1980","score":"0-0","result":"0"}},{"fightNumber":"16","left":{"entryName":"GEAR SLASHER 21","owner":"E. BARBECHO/BON2 - PQ","wb":"7014","weight":"1800","score":"1-0","result":"1"},"right":{"entryName":"BAGWIS 74","owner":"E.R GRUZO - ESP","wb":"693","weight":"1800","score":"0-0","result":"0"}},{"fightNumber":"17","left":{"entryName":"MBC BACKYARD","owner":"M. CACHERO - ESP","wb":"8056","weight":"1730","score":"1-0","result":"1"},"right":{"entryName":"PJ 817","owner":"B. DURANA - ISU","wb":"624","weight":"1745","score":"1-0","result":"1"}},{"fightNumber":"18","left":{"entryName":"JAKE KINGFISHER GF","owner":"J. ARANDAIN - KOR","wb":"191","weight":"1750","score":"1-0","result":"1"},"right":{"entryName":"BP - CP 2","owner":"B. PIZ/R. GENTAPANAN - ISU","wb":"888","weight":"1745","score":"0-0","result":"0"}},{"fightNumber":"19","left":{"entryName":"ENTRA EG 711 - 2","owner":"ENGR. GALAPON - ESP","wb":"696","weight":"1930","score":"1-1","result":"2"},"right":{"entryName":"BLUE ALSON 2","owner":"","wb":"248","weight":"1940","score":"0-1","result":"1"}},{"fightNumber":"20","left":{"entryName":"PMY 3C GF - 2","owner":"BOK&MAY2/ ARVIN P. - ISU","wb":"271","weight":"2070","score":"0-1","result":"1"},"right":{"entryName":"NAZI 2 SLASHERS","owner":"DOC AGA - TAC","wb":"703","weight":"2075","score":"1-1","result":"2"}},{"fightNumber":"21","left":{"entryName":"ZD ALA","owner":"M. GONZALES - ESP","wb":"629","weight":"1775","score":"1-0","result":"1"},"right":{"entryName":"DADZ ELITE 2","owner":"K. DADOR - ESP","wb":"963","weight":"1780","score":"0-1/2","result":"1/2"}},{"fightNumber":"22","left":{"entryName":"KIM KULAMAN","owner":"LOLOY LATO - SNA","wb":"721","weight":"1900","score":"1-0","result":"1"},"right":{"entryName":"APL GF 1","owner":"APL - ISU","wb":"658","weight":"1935","score":"0-0","result":"0"}},{"fightNumber":"23","left":{"entryName":"JDR88/STR88 GF","owner":"J. BONILLA/J. DELA ROSA - LAM","wb":"524","weight":"1790","score":"0-0","result":"0"},"right":{"entryName":"KARC 1","owner":"","wb":"841","weight":"1800","score":"1-1","result":"2"}},{"fightNumber":"24","left":{"entryName":"RAGAAK BANAWAG","owner":"KOR CITY","wb":"215","weight":"1690","score":"1/2-1","result":"1 1/2"},"right":{"entryName":"GOLDEN R GF","owner":"R. DADIVAS - TBOLI","wb":"484","weight":"1675","score":"1-1/2","result":"1 1/2"}},{"fightNumber":"25","left":{"entryName":"CSJR/LGF","owner":"C. SEGURA - TAC","wb":"405","weight":"1730","score":"0-0","result":"0"},"right":{"entryName":"RC WILDFLY","owner":"ENGR. CACHERO - ESP","wb":"8050","weight":"1720","score":"1-0","result":"1"}},{"fightNumber":"26","left":{"entryName":"BLUE ALSON 1","owner":"","wb":"239","weight":"1820","score":"1-0","result":"1"},"right":{"entryName":"SUPER FLY","owner":"DOC CALLAO - TAC.","wb":"715","weight":"1810","score":"0-0","result":"0"}},{"fightNumber":"27","left":{"entryName":"JEB CLASSIC","owner":"SB BANDIGAN - LAM","wb":"400","weight":"1880","score":"0-0","result":"0"},"right":{"entryName":"DADZ ELITE 1","owner":"K. DADOR - ESP","wb":"971","weight":"1880","score":"1-0","result":"1"}},{"fightNumber":"28","left":{"entryName":"CHETO 3","owner":"WILSON - ESP","wb":"131","weight":"1875","score":"0-1","result":"1"},"right":{"entryName":"7DJ'S","owner":"J. DURANA - ISU","wb":"387","weight":"1870","score":"1-1","result":"2"}},{"fightNumber":"29","left":{"entryName":"LRD","owner":"CAP DOLOR/A. DOLAR - ISU.","wb":"888","weight":"2010","score":"0-1","result":"1"},"right":{"entryName":"KARC 2","owner":"","wb":"266","weight":"2035","score":"1-1","result":"2"}},{"fightNumber":"30","left":{"entryName":"EMC FARM","owner":"E. CACHERO - ESP","wb":"8044","weight":"1805","score":"1-co","result":"1 co"},"right":{"entryName":"APL GF 2","owner":"APL - ISU","wb":"692","weight":"1800","score":"0-1","result":"1"}},{"fightNumber":"31","left":{"entryName":"LEVI 817/NKC","owner":"J. DURANA - ISU","wb":"854","weight":"1755","score":"1-1","result":"2"},"right":{"entryName":"TRES HERMANOS ECGF","owner":"ELSON CASTILLON","wb":"114","weight":"1725","score":"0-0","result":"0"}},{"fightNumber":"32","left":{"entryName":"ENTRA EG 711 - 1","owner":"ENGR. GALAPON - ESP","wb":"853","weight":"1960","score":"0-1","result":"1"},"right":{"entryName":"JDR88/STR88 GF","owner":"J. BONILLA/J. DELA ROSA - LAM","wb":"509","weight":"1960","score":"0-0","result":"0"}},{"fightNumber":"33","left":{"entryName":"5 BROTHERS","owner":"A. ACUÑA/BUENAFLOR - LEBAK","wb":"470","weight":"2010","score":"1-1","result":"2"},"right":{"entryName":"MBS GF","owner":"B.&J SEGURA - BAG","wb":"670","weight":"2015","score":"0-0","result":"0"}},{"fightNumber":"34","left":{"entryName":"POWER ONE","owner":"","wb":"216","weight":"1700","score":"1-1","result":"2"},"right":{"entryName":"D'WILD PUNISHER 69 GF","owner":"JEFFERSON GIL - ISU","wb":"7021","weight":"1700","score":"0-0","result":"0"}},{"fightNumber":"35","left":{"entryName":"CHETO","owner":"WILSON - ESP","wb":"1798","weight":"1700","score":"0-0","result":"0"},"right":{"entryName":"JD BLOOD MOON","owner":"B. DURANA - ISU","wb":"767","weight":"1715","score":"0-1","result":"1"}},{"fightNumber":"36","left":{"entryName":"JAKE KINGFISHER GF","owner":"J. ARANDAIN - KOR","wb":"253","weight":"1785","score":"1-0","result":"1"},"right":{"entryName":"BIGCHIEF 1","owner":"P/E RECINTO - LAM","wb":"330","weight":"1785","score":"1-1","result":"2"}},{"fightNumber":"37","left":{"entryName":"DJJ ONGGING 1004","owner":"B&J SEGURA - BAG","wb":"483","weight":"1845","score":"1-1","result":"2"},"right":{"entryName":"RC GF","owner":"JOEL/CAPALAR RC - ISU","wb":"966","weight":"1850","score":"0-0","result":"0"}},{"fightNumber":"38","left":{"entryName":"BLUE ALSON 1","owner":"","wb":"242","weight":"1985","score":"1-0","result":"1"},"right":{"entryName":"7DJ'S","owner":"J. DURANA - ISU","wb":"386","weight":"1990","score":"1-1","result":"2"}},{"fightNumber":"39","left":{"entryName":"ZD ALA","owner":"M. GONZALES - ESP","wb":"211","weight":"1915","score":"1-0","result":"1"},"right":{"entryName":"MACKIE GF/ PAPA GEORGE","owner":"M. LASTIMOSO - MAASIM","wb":"903","weight":"1910","score":"1-1","result":"2"}},{"fightNumber":"40","left":{"entryName":"SHAGGY/ AA DEONILLA","owner":"E. AGUINALDO/ V. BIADO - ISU","wb":"707","weight":"2120","score":"1-0","result":"1"},"right":{"entryName":"NAZI 2 SLASHERS","owner":"DOC AGA - TAC","wb":"707","weight":"2125","score":"1-1","result":"2"}},{"fightNumber":"41","left":{"entryName":"POWER CHOICE","owner":"","wb":"705","weight":"1950","score":"1-1","result":"2"},"right":{"entryName":"J & V CAPRICORN","owner":"J&V G. - BAG.","wb":"931","weight":"1960","score":"0-0","result":"0"}},{"fightNumber":"42","left":{"entryName":"NATHANIEL","owner":"H. FERMO - TAC","wb":"4018","weight":"1870","score":"1-1","result":"2"},"right":{"entryName":"PJ 817","owner":"B. DURANA - ISU","wb":"854","weight":"1865","score":"1-0","result":"1"}},{"fightNumber":"43","left":{"entryName":"PMY 3C GF 1","owner":"BOK&MAY2/ ARVIN P. - ISU","wb":"285","weight":"1700","score":"1-0","result":"1"},"right":{"entryName":"BIGCHIEF 1","owner":"P/E RECINTO - LAM","wb":"854","weight":"1700","score":"1-1","result":"2"}},{"fightNumber":"44","left":{"entryName":"BANAWAG","owner":"ALI LOPEZ & J. LOZANO - PQ/KOR","wb":"625","weight":"1900","score":"1-1","result":"2"},"right":{"entryName":"APL GF 1","owner":"APL - ISU","wb":"676","weight":"1905","score":"0-0","result":"0"}},{"fightNumber":"45","left":{"entryName":"CHETO 3","owner":"WILSON - ESP","wb":"800","weight":"1950","score":"0-1","result":"1"},"right":{"entryName":"RC GF","owner":"JOEL/CAPALAR RC - ISU","wb":"958","weight":"1950","score":"0-0","result":"0"}},{"fightNumber":"46","left":{"entryName":"ENTRA EG 711 - 2","owner":"ENGR. GALAPON - ESP","wb":"1012","weight":"1830","score":"1-1","result":"2"},"right":{"entryName":"POB. PQ","owner":"KAG. CALANG - PQ","wb":"7011","weight":"1830","score":"0-0","result":"0"}},{"fightNumber":"47","left":{"entryName":"KUMBATI JAP GF","owner":"J. PACLIBARE/ R. SULLANO - ISU","wb":"2054","weight":"1915","score":"0-1","result":"1"},"right":{"entryName":"BIGCHIEF 3","owner":"P/E RECINTO - LAM","wb":"603","weight":"1920","score":"1-0","result":"1"}},{"fightNumber":"48","left":{"entryName":"BP - CB 1","owner":"B. PIZ/R. GENTAPANAN - ISU","wb":"927","weight":"1870","score":"0-1","result":"1"},"right":{"entryName":"LJPE - BIG BRADER","owner":"P. ESTABILLO - MAITUM","wb":"617","weight":"1870","score":"1-1","result":"2"}},{"fightNumber":"49","left":{"entryName":"NATHANIEL","owner":"H. FERMO - TAC","wb":"4086","weight":"1920","score":"1-1","result":"2"},"right":{"entryName":"MB 12 RLD MAXX/MACKIE GF","owner":"M. LASTIMOSO - MAASIM","wb":"797","weight":"1915","score":"0-0","result":"0"}},{"fightNumber":"50","left":{"entryName":"KARC 1","owner":"","wb":"203","weight":"1860","score":"1-1","result":"2"},"right":{"entryName":"REX SALABACA","owner":"M. RANDING - ESP","wb":"437","weight":"1855","score":"0-0","result":"0"}},{"fightNumber":"51","left":{"entryName":"GEGS FARM","owner":"J. GEGONE - ESP","wb":"755","weight":"1770","score":"0-1","result":"1"},"right":{"entryName":"BLACK HANDSOME","owner":"JARWIN S.","wb":"4084","weight":"1775","score":"0-1","result":"1"}},{"fightNumber":"52","left":{"entryName":"CHETO","owner":"WILSON - ESP","wb":"807","weight":"1710","score":"0-0","result":"0"},"right":{"entryName":"LEVI 817/NKC","owner":"J. DURANA - ISU","wb":"908","weight":"1720","score":"1-1","result":"2"}},{"fightNumber":"53","left":{"entryName":"EMC FARM","owner":"E. CACHERO - ESP","wb":"8043","weight":"1730","score":"1-co","result":"1 co"},"right":{"entryName":"BIGCHIEF 2","owner":"P/E RECINTO - LAM","wb":"935","weight":"1735","score":"0-co","result":"0 co"}},{"fightNumber":"54","left":{"entryName":"LRD","owner":"CAP DOLOR/A. DOLAR - ISU.","wb":"875","weight":"1995","score":"0-1","result":"1"},"right":{"entryName":"LAKAY BACKYARD","owner":"E. AGUINALDO/ V. BIADO - ISU","wb":"704","weight":"2000","score":"0-1","result":"1"}},{"fightNumber":"55","left":{"entryName":"SPA 108 GF","owner":"S. AKIATAN - SNA","wb":"750","weight":"1970","score":"1-1","result":"2"},"right":{"entryName":"MBC ENZO","owner":"MELMEL C. - TAC","wb":"315","weight":"1985","score":"0-1","result":"1"}},{"fightNumber":"56","left":{"entryName":"ISABELLE SISTERS","owner":"ALVIN & JOHN REGANIT - GENSAN","wb":"928","weight":"2000","score":"1-0","result":"1"},"right":{"entryName":"THUNDERS","owner":"E. GLEYO - ISU","wb":"561","weight":"2005","score":"1-1","result":"2"}},{"fightNumber":"57","left":{"entryName":"RM PRINCESS","owner":"K/R MALUNES - ESP","wb":"8067","weight":"1700","score":"1-0","result":"1"},"right":{"entryName":"JR SEVENTYSIX GF","owner":"R. FUSCABLO - NOR","wb":"139","weight":"1700","score":"0-1","result":"1"}},{"fightNumber":"58","left":{"entryName":"FIRE STARTER","owner":"J.C PELAEZ - PQ","wb":"201","weight":"1890","score":"0-1","result":"1"},"right":{"entryName":"LJPE GARDEN GF","owner":"P. ESTABILLO - MAITUM","wb":"642","weight":"1880","score":"1-0","result":"1"}},{"fightNumber":"59","left":{"entryName":"CHETO 2","owner":"WILSON - ESP","wb":"916","weight":"1865","score":"0-1","result":"1"},"right":{"entryName":"KUMBATI JAP GF","owner":"J. PACLIBARE/ R. SULLANO - ISU","wb":"2033","weight":"1855","score":"0-1","result":"1"}},{"fightNumber":"60","left":{"entryName":"KIM KULAMAN","owner":"LOLOY LATO - SNA","wb":"675","weight":"1960","score":"1-0","result":"1"},"right":{"entryName":"APL GF 2","owner":"APL - ISU","wb":"695","weight":"1965","score":"0-1","result":"1"}},{"fightNumber":"61","left":{"entryName":"REX SALABACA","owner":"M. RANDING - ESP","wb":"439","weight":"2130","score":"0-0","result":"0"},"right":{"entryName":"MBC ENZO","owner":"MELMEL C. - TAC","wb":"310","weight":"2135","score":"0-1","result":"1"}},{"fightNumber":"62","left":{"entryName":"3J RED THUNDER GF","owner":"J. SENUGBA - ESP","wb":"8066","weight":"1890","score":"0-1","result":"1"},"right":{"entryName":"GEAR SLASHER 21","owner":"E. BARBECHO/BON2 - PQ","wb":"7010","weight":"1890","score":"1-0","result":"1"}},{"fightNumber":"63","left":{"entryName":"LAKAY BACKYARD","owner":"E. AGUINALDO/ V. BIADO - ISU","wb":"711","weight":"2000","score":"0-1","result":"1"},"right":{"entryName":"J & V CAPRICORN","owner":"J&V G. - BAG.","wb":"941","weight":"2000","score":"0-0","result":"0"}},{"fightNumber":"64","left":{"entryName":"ELPT","owner":"EDGAR P./ JK ELIDO - ISU","wb":"974","weight":"2040","score":"1-0","result":"1"},"right":{"entryName":"BLUE ALSON 2","owner":"","wb":"235","weight":"2035","score":"0-1","result":"1"}},{"fightNumber":"65","left":{"entryName":"TRES HERMANOS","owner":"","wb":"914","weight":"1930","score":"0-1","result":"1"},"right":{"entryName":"BAGWIS 74","owner":"E.R GRUZO - ESP","wb":"687","weight":"1930","score":"0-0","result":"0"}},{"fightNumber":"66","left":{"entryName":"RAGAAK BANAWAG","owner":"KOR CITY","wb":"217","weight":"1620","score":"1/2-1","result":"1 1/2"},"right":{"entryName":"BILISBISAN","owner":"R. PEDROSO - TAC","wb":"819","weight":"1665","score":"0-1","result":"1"}},{"fightNumber":"67","left":{"entryName":"KARC 2","owner":"","wb":"287","weight":"1825","score":"1-1","result":"2"},"right":{"entryName":"JACOB ACE DA","owner":"DE ASIS - TAC","wb":"750","weight":"1825","score":"1-0","result":"1"}},{"fightNumber":"68","left":{"entryName":"BIGCHIEF 3","owner":"P/E RECINTO - LAM","wb":"990","weight":"2060","score":"1-0","result":"1"},"right":{"entryName":"BLACK HANDSOME","owner":"JARWIN S.","wb":"4092","weight":"2070","score":"0-1","result":"1"}},{"fightNumber":"69","left":{"entryName":"BANAWAG","owner":"ALI LOPEZ & J. LOZANO - PQ/KOR","wb":"614","weight":"2070","score":"1-1","result":"2"},"right":{"entryName":"RC WILDFLY","owner":"ENGR. CACHERO - ESP","wb":"8051","weight":"2070","score":"1-0","result":"1"}},{"fightNumber":"70","left":{"entryName":"PAW PAW","owner":"ITIK - ISU","wb":"555","weight":"1835","score":"1-1/2","result":"1 1/2"},"right":{"entryName":"DADZ ELITE 2","owner":"K. DADOR - ESP","wb":"960","weight":"1835","score":"0-1/2","result":"1/2"}},{"fightNumber":"71","left":{"entryName":"DOUBLE EE","owner":"AMEE TONO - ISU","wb":"2004","weight":"1970","score":"0-0","result":"0"},"right":{"entryName":"BILISBISAN","owner":"R. PEDROSO - TAC","wb":"809","weight":"1965","score":"0-1","result":"1"}},{"fightNumber":"72","left":{"entryName":"LJPE - BIG BRADER","owner":"P. ESTABILLO - MAITUM","wb":"616","weight":"2100","score":"1-1","result":"2"},"right":{"entryName":"TRES HERMANOS ECGF","owner":"ELSON CASTILLON","wb":"162","weight":"2085","score":"0-0","result":"0"}},{"fightNumber":"73","left":{"entryName":"BP - CP 2","owner":"B. PIZ/R. GENTAPANAN - ISU","wb":"884","weight":"1930","score":"0-0","result":"0"},"right":{"entryName":"MACKIE GF/ PAPA GEORGE","owner":"M. LASTIMOSO - MAASIM","wb":"796","weight":"1935","score":"1-1","result":"2"}},{"fightNumber":"74","left":{"entryName":"CSJR/LGF","owner":"C. SEGURA - TAC","wb":"367","weight":"1760","score":"0-0","result":"0"},"right":{"entryName":"GOLDEN R GF","owner":"R. DADIVAS - TBOLI","wb":"509","weight":"1765","score":"1-1/2","result":"1 1/2"}},{"fightNumber":"75","left":{"entryName":"PMY 3C GF - 2","owner":"BOK&MAY2/ ARVIN P. - ISU","wb":"275","weight":"1970","score":"0-1","result":"1"},"right":{"entryName":"KARC 3","owner":"","wb":"329","weight":"1965","score":"0-0","result":"0"}},{"fightNumber":"76","left":{"entryName":"NKC GF","owner":"NATOY ADOLFO - KOR. CITY","wb":"586","weight":"1775","score":"0-1","result":"1"},"right":{"entryName":"D'WILD PUNISHER 69 GF","owner":"JEFFERSON GIL - ISU","wb":"556","weight":"1780","score":"0-0","result":"0"}},{"fightNumber":"77","left":{"entryName":"DADZ ELITE 1","owner":"K. DADOR - ESP","wb":"966","weight":"1895","score":"1-0","result":"1"},"right":{"entryName":"BP - CB 1","owner":"B. PIZ/R. GENTAPANAN - ISU","wb":"492","weight":"1890","score":"0-1","result":"1"}},{"fightNumber":"78","left":{"entryName":"CHETO 2","owner":"WILSON - ESP","wb":"590","weight":"1815","score":"0-1","result":"1"},"right":{"entryName":"SUPER FLY","owner":"DOC CALLAO - TAC.","wb":"855","weight":"1805","score":"0-0","result":"0"}}];
 
     let allFights = [];
+    let currentView = 'cards';
 
     function escapeHtml(value) {
       if (value === null || value === undefined) return '';
@@ -1674,7 +198,121 @@
         return createFightCard(fight, total);
       }).join('');
       syncHeaderSpace();
-      alignEntryRows();
+      renderSummary(fights);
+      applySearch();
+      scheduleCardAlignment();
+    }
+
+    function summarizeEntries(fights) {
+      const summary = {};
+
+      fights.forEach(function(fight) {
+        ['left', 'right'].forEach(function(sideName) {
+          const side = fight[sideName];
+          const name = normalizeEntry(side.entryName);
+
+          if (!name) {
+            return;
+          }
+
+          if (!summary[name]) {
+            summary[name] = {
+              name: side.entryName,
+              win: 0,
+              lose: 0,
+              carry: 0,
+              points: 0
+            };
+          }
+
+          if (side.badge && side.badge.type === 'win') {
+            summary[name].win++;
+            summary[name].points += 1;
+          }
+
+          if (side.badge && side.badge.type === 'loss') {
+            summary[name].lose++;
+          }
+
+          if (side.badge && side.badge.type === 'draw') {
+            summary[name].points += 0.5;
+          }
+
+          if (side.badge && side.badge.type === 'carry') {
+            summary[name].carry++;
+          }
+        });
+      });
+
+      return Object.keys(summary)
+        .map(function(key) {
+          return summary[key];
+        })
+        .sort(function(a, b) {
+          return a.name.localeCompare(b.name);
+        });
+    }
+
+    function formatSummaryTotal(row) {
+      let total = String(row.points);
+
+      if (row.points % 1 === 0.5) {
+        total = Math.floor(row.points)
+          ? Math.floor(row.points) + ' 1/2'
+          : '1/2';
+      }
+
+      if (row.carry) {
+        total += 'CO';
+      }
+
+      return total;
+    }
+
+    function renderSummary(fights) {
+      const summaryView = document.getElementById('summaryView');
+      const rows = summarizeEntries(fights);
+
+      summaryView.innerHTML = `
+        <div class="summary-table" role="table">
+          <div class="summary-row summary-head" role="row">
+            <div role="columnheader">Entry Name</div>
+            <div class="summary-number-head" role="columnheader">Win</div>
+            <div class="summary-number-head" role="columnheader">Lose</div>
+            <div class="summary-number-head" role="columnheader">C/O</div>
+            <div class="summary-number-head" role="columnheader">Total</div>
+          </div>
+          ${rows.map(function(row) {
+            const searchText = row.name.toLowerCase();
+
+            return `
+              <div class="summary-row" role="row" data-search="${escapeHtml(searchText)}">
+                <div class="summary-entry" role="cell">${escapeHtml(row.name)}</div>
+                <div class="summary-number summary-win" role="cell">${row.win}</div>
+                <div class="summary-number summary-lose" role="cell">${row.lose}</div>
+                <div class="summary-number summary-carry" role="cell">${row.carry}</div>
+                <div class="summary-number" role="cell">${escapeHtml(formatSummaryTotal(row))}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function setView(view) {
+      currentView = view;
+
+      document.getElementById('fightCards').classList.toggle('hidden', view !== 'cards');
+      document.getElementById('summaryView').classList.toggle('hidden', view !== 'summary');
+
+      const toggle = document.getElementById('viewToggle');
+      toggle.classList.toggle('is-active', view === 'summary');
+      toggle.setAttribute('aria-label', view === 'summary' ? 'Show fight cards' : 'Show entry summary');
+      toggle.setAttribute('title', view === 'summary' ? 'Fight cards' : 'Entry summary');
+
+      applySearch();
+      syncHeaderSpace();
+      scheduleCardAlignment();
     }
 
     function syncHeaderSpace() {
@@ -1684,36 +322,135 @@
     }
 
     function alignEntryRows() {
+      const sectionSelectors = [
+        '.entry-line',
+        '.owner-block',
+        '.details-block',
+        '.stats-block'
+      ];
+
       document.querySelectorAll('.fight-card').forEach(function(card) {
-        const rows = card.querySelectorAll('.entry-line');
-        let maxHeight = 0;
-        rows.forEach(function(row) {
-          row.style.minHeight = '0';
-          maxHeight = Math.max(maxHeight, row.offsetHeight);
-        });
-        rows.forEach(function(row) {
-          row.style.minHeight = maxHeight + 'px';
+        sectionSelectors.forEach(function(selector) {
+          const sections = card.querySelectorAll(selector);
+          let maxHeight = 0;
+
+          sections.forEach(function(section) {
+            section.style.minHeight = '0';
+          });
+
+          sections.forEach(function(section) {
+            maxHeight = Math.max(maxHeight, section.getBoundingClientRect().height);
+          });
+
+          sections.forEach(function(section) {
+            section.style.minHeight = Math.ceil(maxHeight) + 'px';
+          });
         });
       });
     }
 
-    document.getElementById('fightSearch').addEventListener('input', function() {
-      const query = this.value.trim().toLowerCase();
-      const cards = document.querySelectorAll('#fightCards > article');
-      let visible = 0;
-      cards.forEach(function(card) {
-        const matches = !query || card.dataset.search.includes(query);
-        card.style.display = matches ? '' : 'none';
-        if (matches) visible++;
+    function scheduleCardAlignment() {
+      window.requestAnimationFrame(function() {
+        alignEntryRows();
+
+        window.requestAnimationFrame(function() {
+          alignEntryRows();
+        });
       });
+    }
+
+    function applySearch() {
+      const query = document.getElementById('fightSearch').value.trim().toLowerCase();
+      const selector = currentView === 'summary'
+        ? '#summaryView .summary-row:not(.summary-head)'
+        : '#fightCards > article';
+      const items = document.querySelectorAll(selector);
+      let visible = 0;
+
+      items.forEach(function(item) {
+        const matches = !query || item.dataset.search.includes(query);
+        item.classList.toggle('hidden', !matches);
+
+        if (matches) {
+          visible++;
+        }
+      });
+
       document.getElementById('emptyState').classList.toggle('hidden', visible > 0);
+    }
+
+    document.getElementById('fightSearch').addEventListener('input', applySearch);
+
+    document.getElementById('viewToggle').addEventListener('click', function() {
+      setView(currentView === 'cards' ? 'summary' : 'cards');
     });
 
-    allFights = assignBadges(rawFights);
-    renderFights(allFights);
+    function showLoadError(message) {
+      document.getElementById('fightCards').innerHTML = '';
+      const empty = document.getElementById('emptyState');
+      empty.textContent = message;
+      empty.classList.remove('hidden');
+      syncHeaderSpace();
+    }
+
+    function loadAppsScriptData() {
+      const callbackName =
+        'loadFightCards_' + Date.now();
+
+      const script =
+        document.createElement('script');
+
+      window[callbackName] = function(data) {
+        delete window[callbackName];
+        script.remove();
+
+        if (!data.ok || !data.fights) {
+          return;
+        }
+
+        allFights =
+          assignBadges(data.fights);
+
+        renderFights(allFights);
+      };
+
+      script.onerror = function() {
+        delete window[callbackName];
+        script.remove();
+      };
+
+      script.src =
+        APPS_SCRIPT_URL +
+        '?callback=' +
+        encodeURIComponent(callbackName) +
+        '&cacheBust=' +
+        Date.now();
+
+      document.body.appendChild(script);
+    }
+
+    function loadFights() {
+      allFights = assignBadges(FALLBACK_FIGHTS.map(function(fight) {
+        return JSON.parse(JSON.stringify(fight));
+      }));
+      renderFights(allFights);
+
+      if (!APPS_SCRIPT_URL) {
+        return;
+      }
+
+      loadAppsScriptData();
+    }
+
+    loadFights();
+
+    if (document.fonts) {
+      document.fonts.ready.then(scheduleCardAlignment);
+    }
+
     window.addEventListener('resize', function() {
       syncHeaderSpace();
-      alignEntryRows();
+      scheduleCardAlignment();
     });
   </script>
 </body>
